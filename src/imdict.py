@@ -24,22 +24,32 @@ class node:
 
 
 def myadd(tree,key, value):
-    if key == tree.k:
-        tree.v=value
-        return True
-    if key < tree.k:
-        if tree.lc == None:
-            tree.lc = node(key, value)
+    copy_tree=mycopy(tree)
+    def func(tree,key,value):
+        if key == tree.k:
+            tree.v = value
             return True
-        else:
-            return myadd(tree.lc,key,value)
-    if key > tree.k:
-        if tree.rc == None:
-            tree.rc = node(key, value)
-            return True
-        else:
-            return myadd(tree.rc,key, value)
-
+        if key < tree.k:
+            if tree.lc == None:
+                tree.lc = node(key, value)
+                return True
+            else:
+                return func(tree.lc, key, value)
+        if key > tree.k:
+            if tree.rc == None:
+                tree.rc = node(key, value)
+                return True
+            else:
+                return func(tree.rc, key, value)
+    func(copy_tree,key,value)
+    return copy_tree
+def mycopy(tree):
+    if tree==None:
+        return None
+    copy_tree=node(tree.k,tree.v)
+    copy_tree.rc=mycopy(tree.rc)
+    copy_tree.lc = mycopy(tree.lc)
+    return copy_tree
 def mysize(tree):
     if tree != None:
         tree.count=0
@@ -56,7 +66,7 @@ def myfromlist(list):
     root = node(temp[0], temp[1])
     while len(list)!=0:
         temp=list.pop()
-        myadd(root,temp[0],temp[1])
+        root=myadd(root,temp[0],temp[1])
     return root
 
 def mytolist(tree):
@@ -151,6 +161,6 @@ class dict():
             self.root=node(key,value)
             self.count+=1
         else:
-            myadd(self.root,key,value)
+            self.root = myadd(self.root,key,value)
 
 

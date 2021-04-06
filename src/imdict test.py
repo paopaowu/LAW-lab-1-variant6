@@ -6,23 +6,24 @@ import imdict
 class TestImmutableList(unittest.TestCase):
     def test_add(self):
         root=imdict.node(1,1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         self.assertEqual(imdict.mytolist(root), [[0,2],[1,2],[2,2]])
+
     def test_remove(self):
         root=imdict.node(1,1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         root=imdict.myremove(root,1)
         self.assertEqual(imdict.mytolist(root), [[0,2],[2,2]])
 
     def test_size(self):
         root = imdict.node(1, 1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         self.assertEqual(imdict.mysize(root), 3)
 
     def test_Conversion(self):
@@ -30,17 +31,17 @@ class TestImmutableList(unittest.TestCase):
         self.assertEqual(imdict.mytolist(root), [[0, 1], [2, 1], [3, 1]])
     def test_find(self):
         root = imdict.node(1, 1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         self.assertEqual(imdict.myfind(root,2), 2)
 
     def test_iterator(self) :
 
         root = imdict.node(1, 1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         list=imdict.mytolist(root)
         itor=iter(root)
         test=[]
@@ -55,9 +56,9 @@ class TestImmutableList(unittest.TestCase):
                 return True
             return False
         root = imdict.node(1, 1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         list=imdict.mytolist(root)
         list2 = []
         for i in range(len(list)):
@@ -73,9 +74,9 @@ class TestImmutableList(unittest.TestCase):
         def func(k):
             k+1
         root = imdict.node(1, 1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         list=imdict.mytolist(root)
         list2 = []
         for i in list:
@@ -91,9 +92,9 @@ class TestImmutableList(unittest.TestCase):
         def func(k,j):
             return k+j
         root = imdict.node(1, 1)
-        imdict.myadd(root, 1, 2)
-        imdict.myadd(root, 2, 2)
-        imdict.myadd(root, 0, 2)
+        root =imdict.myadd(root, 1, 2)
+        root =imdict.myadd(root, 2, 2)
+        root =imdict.myadd(root, 0, 2)
         sum=imdict.myreduce(iter(root), func)
         self.assertEqual(sum, 6)
     def test_dict(self):
@@ -107,13 +108,13 @@ class TestImmutableList(unittest.TestCase):
         self.assertEqual(d.getting(1), None)
     def test_concat(self):
         t1=imdict.node(1,1)
-        imdict.myadd(t1, 1, 2)
-        imdict.myadd(t1, 2, 2)
-        imdict.myadd(t1, 0, 2)
+        t1 =imdict.myadd(t1, 1, 2)
+        t1 =imdict.myadd(t1, 2, 2)
+        t1 =imdict.myadd(t1, 0, 2)
         t2 = imdict.node(-1, 1)
-        imdict.myadd(t2, -1, 2)
-        imdict.myadd(t2, 3, 2)
-        imdict.myadd(t2, 1, 3)
+        t2 =imdict.myadd(t2, -1, 2)
+        t2 =imdict.myadd(t2, 3, 2)
+        t2 =imdict.myadd(t2, 1, 3)
         t3=imdict.myconact(t1,t2)
         self.assertEqual(imdict.mytolist(t3), [[-1,2],[0,2],[1,2],[2,2],[3,2]])
         t3=imdict.myconact(t2,t1)
