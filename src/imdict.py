@@ -1,6 +1,3 @@
-import unittest
-from hypothesis import given
-import hypothesis.strategies as st
 
 
 class node:
@@ -11,33 +8,20 @@ class node:
         self.rc=rightChild
         self.lc=leftChild
         self.count=0
-
-
-
-class treeIterator:
-
-    def __init__(self,data):
-        self.index=-1
-        self.len=len(data)
-        self.data=data
-    def next(self):
-        self.index+=1
-        if self.len>self.index:
-            return self.data[self.index]
-        else:
+    def __iter__(self):
+        self.list=mytolist(self)
+        self.iter_count=-1
+        return self
+    def __next__(self):
+        self.iter_count+=1
+        if len(self.list)<=self.iter_count:
             raise StopIteration
+        return self.list[self.iter_count]
     def has_next(self):
-        if self.len > self.index+1:
-            return True
-        else:
+        if len(self.list) <= self.iter_count+1:
             return False
+        return True
 
-def myiterator(tree):
-    list=mytolist(tree)
-    list2=[]
-    for i in list:
-        list2.append(i)
-    return treeIterator(list2)
 
 def myadd(tree,key, value):
     if key == tree.k:
@@ -106,7 +90,8 @@ def myfilter(tree, func):
     for i in list:
         if func(i[0]):
              list2.append(i)
-    return treeIterator(list2)
+    root=myfromlist(list2)
+    return iter(root)
 
 def mymap(tree, func):
     list=mytolist(tree)
@@ -114,13 +99,14 @@ def mymap(tree, func):
     for i in list:
         i[1]=func(i[1])
         list2.append(i)
-    return treeIterator(list2)
+    root=myfromlist(list2)
+    return iter(root)
 
 def myreduce(treeitor,func):
     if treeitor.has_next():
-        res=treeitor.next()[1]
+        res=next(treeitor)[1]
     while treeitor.has_next():
-        res=func(res,treeitor.next()[1])
+        res=func(res,next(treeitor)[1])
     return res
 
 def myremove(tree, key):
@@ -168,119 +154,3 @@ class dict():
             myadd(self.root,key,value)
 
 
-class TestImmutableList(unittest.TestCase):
-    def test_add(self):
-        root=node(1,1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        self.assertEqual(mytolist(root), [[0,2],[1,2],[2,2]])
-    def test_remove(self):
-        root=node(1,1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        root=myremove(root,1)
-        self.assertEqual(mytolist(root), [[0,2],[2,2]])
-
-    def test_size(self):
-        root = node(1, 1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        self.assertEqual(mysize(root), 3)
-
-    def test_Conversion(self):
-        root=myfromlist([[0,1],[2,1],[3,1]])
-        self.assertEqual(mytolist(root), [[0, 1], [2, 1], [3, 1]])
-    def test_find(self):
-        root = node(1, 1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        self.assertEqual(myfind(root,2), 2)
-    def test_iterator(self) :
-
-        root = node(1, 1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        list=mytolist(root)
-        itor=myiterator(root)
-        test=[]
-        while itor.has_next():
-            test.append(itor.next())
-        self.assertEqual(test, list)
-
-        self.assertRaises(StopIteration, lambda : itor.next())
-    def test_filter(self):
-        def func(k):
-            if k%2==0:
-                return True
-            return False
-        root = node(1, 1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        list=mytolist(root)
-        list2 = []
-        for i in range(len(list)):
-            if func(list[i][0]):
-                list2.append(list[i])
-
-        itor=myfilter(root, func)
-        test=[]
-        while itor.has_next():
-            test.append(itor.next())
-        self.assertEqual(test, list2)
-    def test_map(self):
-        def func(k):
-            k+1
-        root = node(1, 1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        list=mytolist(root)
-        list2 = []
-        for i in list:
-            i[1] = func(i[1])
-            list2.append(i)
-
-        itor=mymap(root, func)
-        test=[]
-        while itor.has_next():
-            test.append(itor.next())
-        self.assertEqual(test, list2)
-    def test_reduce(self):
-        def func(k,j):
-            return k+j
-        root = node(1, 1)
-        myadd(root, 1, 2)
-        myadd(root, 2, 2)
-        myadd(root, 0, 2)
-        sum=myreduce(myiterator(root), func)
-        self.assertEqual(sum, 6)
-    def test_dict(self):
-        d=dict()
-        self.assertEqual(d.getting(1), None)
-        d.setting(0,1)
-        self.assertEqual(d.getting(0), 1)
-        d.setting(0, 2)
-        self.assertEqual(d.getting(0), 2)
-        d.setting(1, None)
-        self.assertEqual(d.getting(1), None)
-    def test_concat(self):
-        t1=node(1,1)
-        myadd(t1, 1, 2)
-        myadd(t1, 2, 2)
-        myadd(t1, 0, 2)
-        t2 = node(-1, 1)
-        myadd(t2, -1, 2)
-        myadd(t2, 3, 2)
-        myadd(t2, 1, 3)
-        t3=myconact(t1,t2)
-        self.assertEqual(mytolist(t3), [[-1,2],[0,2],[1,2],[2,2],[3,2]])
-        t3=myconact(t2,t1)
-        self.assertEqual(mytolist(t3), [[-1,2],[0,2],[1,2],[2,2],[3,2]])
-
-unittest.main()
