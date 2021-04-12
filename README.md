@@ -18,7 +18,7 @@
 
 ​	2.Binary tree's add(),size(),fromlist(),tolist(),find(),filter(),map(),reduce(),remove(),iterator(),conact().
 
-**work demonstration:** python imdict.py -v. python mdict.py -v
+**work demonstration:** python imdict test.py -v. python mdict_test.py -v
 
 **conclusion:** We implement the dictionary based on binary tree through python. In this experiment, we installed Python and git environment. Familiar with the basic syntax of Python.
 
