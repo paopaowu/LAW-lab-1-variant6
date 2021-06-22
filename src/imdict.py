@@ -22,7 +22,6 @@ class node:
             return False
         return True
 
-
 def add(tree, key, value):
     copy_tree = copy(tree)
 
@@ -155,10 +154,6 @@ def mconcat(t1, t2):
         elif l1[0][0] > l2[0][0]:
             l3.append(l2.pop(0))
         elif l1[0][0] == l2[0][0]:
-            if l1[0][1] > l2[0][1]:
-                l3.append(l2.pop(0))
-                l1.pop(0)
-            else:
                 l3.append(l1.pop(0))
                 l2.pop(0)
     while len(l1) > 0:

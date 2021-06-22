@@ -35,19 +35,6 @@ class mydict():
     count = 0
     root = None
 
-    def getting(self, key):
-        if self.count == 0:
-            return None
-        else:
-            return self.find(key)
-
-    def setting(self, key, value):
-        if self.count == 0:
-            self.root = node(key, value)
-            self.count += 1
-        else:
-            self.add(key, value)
-
     def __iter__(self):
         list = self.to_list()
         list2 = []
@@ -109,7 +96,8 @@ class mydict():
         return list
 
     def find(self, key):
-
+        if self.count == 0:
+            return None
         def myfindt(n, key):
             if n.k == key:
                 return n.v
@@ -159,7 +147,7 @@ class mydict():
         self.count = 0
         self.from_list(list)
 
-    def mconcat(self, dict1, dict2):
+    def mconcat(dict1, dict2):
         if (dict1 != None and dict2 != None):
             l1 = dict1.to_list()
             l2 = dict2.to_list()
@@ -189,7 +177,9 @@ class mydict():
             l3.append(l1.pop(0))
         while len(l2) > 0:
             l3.append(l2.pop(0))
-        return self.from_list(l3)
+        dic = mydict()
+        dic.from_list(l3)
+        return dic
 
     def mempty(self):
         return None

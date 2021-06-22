@@ -8,34 +8,34 @@ class TestImmutableList(unittest.TestCase):
     def test_add(self):
         root = imdict.node(1, 1)
         root = imdict.add(root, 1, 2)
-        root = imdict.add(root, 2, 2)
-        root = imdict.add(root, 0, 2)
-        self.assertEqual(imdict.to_list(root), [[0, 2], [1, 2], [2, 2]])
+        root = imdict.add(root, 2, 'abc')
+        root = imdict.add(root, 0, 'cba')
+        self.assertEqual(imdict.to_list(root), [[0, 'cba'], [1, 2], [2, 'abc']])
 
     def test_remove(self):
         root = imdict.node(1, 1)
         root = imdict.add(root, 1, 2)
-        root = imdict.add(root, 2, 2)
-        root = imdict.add(root, 0, 2)
+        root = imdict.add(root, 2, 'abc')
+        root = imdict.add(root, 0, 'cba')
         root = imdict.remove(root, 1)
-        self.assertEqual(imdict.to_list(root), [[0, 2], [2, 2]])
+        self.assertEqual(imdict.to_list(root), [[0, 'cba'], [2, 'abc']])
 
     def test_size(self):
         root = imdict.node(1, 1)
         root = imdict.add(root, 1, 2)
-        root = imdict.add(root, 2, 2)
-        root = imdict.add(root, 0, 2)
+        root = imdict.add(root, 2, 'abc')
+        root = imdict.add(root, 0, 'cba')
         self.assertEqual(imdict.size(root), 3)
 
     def test_to_list(self):
         root = imdict.node(0, 1)
-        root = imdict.add(root, 2, 1)
-        root = imdict.add(root, 3, 1)
-        self.assertEqual(imdict.to_list(root), [[0, 1], [2, 1], [3, 1]])
+        root = imdict.add(root, 2, 'abc')
+        root = imdict.add(root, 3, 'cba')
+        self.assertEqual(imdict.to_list(root), [[0, 1], [2, 'abc'], [3, 'cba']])
 
     def test_from_list(self):
-        root = imdict.from_list([[0, 1], [2, 1], [3, 1]])
-        self.assertEqual(imdict.to_list(root), [[0, 1], [2, 1], [3, 1]])
+        root = imdict.from_list([[0, 1], [2, 'abc'], [3, 'cba']])
+        self.assertEqual(imdict.to_list(root), [[0, 1], [2, 'abc'], [3, 'cba']])
 
     @given(st.lists(st.lists(st.integers(), min_size=2, max_size=2)))
     def test_from_list_to_list_equality(self, a):
@@ -73,24 +73,26 @@ class TestImmutableList(unittest.TestCase):
     def test_find(self):
         root = imdict.node(1, 1)
         root = imdict.add(root, 1, 2)
-        root = imdict.add(root, 2, 2)
-        root = imdict.add(root, 0, 2)
-        self.assertEqual(imdict.find(root, 2), 2)
+        root = imdict.add(root, 2, 'abc')
+        root = imdict.add(root, 0, 'cba')
+        self.assertEqual(imdict.find(root, 2), 'abc')
 
     def test_iterator(self):
 
         root = imdict.node(1, 1)
         root = imdict.add(root, 1, 2)
-        root = imdict.add(root, 2, 2)
-        root = imdict.add(root, 0, 2)
-        list = imdict.to_list(root)
-        itor = iter(root)
-        test = []
-        while itor.has_next():
-            test.append(next(itor))
-        self.assertEqual(test, list)
-
-        self.assertRaises(StopIteration, lambda: next(itor))
+        root = imdict.add(root, 2, 'cat')
+        root = imdict.add(root, 0, 'dog')
+        dicList = []
+        for dic in root:
+            dicList.append(dic)
+        self.assertEqual(dicList, [[0, 'dog'], [1, 2], [2, 'cat']])
+        itrate = iter(root)
+        leng = len(dicList)
+        dicList = []
+        while (itrate.has_next()):
+            dicList.append(next(itrate))
+        self.assertEqual(dicList,[[0, 'dog'], [1, 2], [2, 'cat']])
 
     def test_filter(self):
         def func(k):
@@ -156,18 +158,18 @@ class TestImmutableList(unittest.TestCase):
         self.assertEqual(d.getting(1), None)
 
     def test_mconcat(self):
-        t1 = imdict.node(1, 1)
+        t1 = imdict.node(0, 1)
         t1 = imdict.add(t1, 1, 2)
-        t1 = imdict.add(t1, 2, 2)
-        t1 = imdict.add(t1, 0, 2)
+        t1 = imdict.add(t1, 2, 'abc')
+        t1 = imdict.add(t1, 3, 'cba')
         t2 = imdict.node(-1, 1)
-        t2 = imdict.add(t2, -1, 2)
-        t2 = imdict.add(t2, 3, 2)
-        t2 = imdict.add(t2, 1, 3)
+        t2 = imdict.add(t2, 4, 2)
+        t2 = imdict.add(t2, 5, 'cat')
+        t2 = imdict.add(t2, 6, 'dog')
         t3 = imdict.mconcat(t1, t2)
-        self.assertEqual(imdict.to_list(t3), [[-1, 2], [0, 2], [1, 2], [2, 2], [3, 2]])
+        self.assertEqual(imdict.to_list(t3), [[-1, 1], [0, 1], [1, 2] , [2, 'abc'], [3, 'cba'], [4, 2] , [5, 'cat'], [6, 'dog']])
         t3 = imdict.mconcat(t2, t1)
-        self.assertEqual(imdict.to_list(t3), [[-1, 2], [0, 2], [1, 2], [2, 2], [3, 2]])
+        self.assertEqual(imdict.to_list(t3), [[-1, 1], [0, 1], [1, 2] , [2, 'abc'], [3, 'cba'], [4, 2] , [5, 'cat'], [6, 'dog']])
 
-
-unittest.main()
+if __name__ == '__main__':
+    unittest.main()
