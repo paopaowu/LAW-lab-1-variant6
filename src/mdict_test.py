@@ -8,10 +8,10 @@ class TestImmutableList(unittest.TestCase):
 
     def test_add(self):
         dict = mydict()
-        dict.add(1, 2)
-        dict.add(2, 'cat')
-        dict.add(0, 'dog')
-        self.assertEqual(dict.to_list(), [[0, 'dog'], [1, 2], [2, 'cat']])
+        dict.add("1", 2)
+        dict.add("hh", 'cat')
+        dict.add("0ii", 'dog')
+        self.assertEqual(dict.to_list(), [["0ii", 'dog'], ["1", 2], ["hh", 'cat']])
 
     def test_remove(self):
         dict = mydict()
@@ -51,7 +51,6 @@ class TestImmutableList(unittest.TestCase):
         while(leng):
             self.assertEqual(next(itrate1),next(itrate2))
             leng-=1
-
 
     def test_filter(self):
         def func(k):
@@ -147,7 +146,7 @@ class TestImmutableList(unittest.TestCase):
         dict3 = mydict.mconcat(dict2, dict1)
         self.assertEqual(dict3.to_list(), [[-1, 2], [0, 2], [1, 2], [2, 2], [3, 2], [4, 1]])
 
-    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=2)))
+    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=4)))
     def test_from_list_to_list_equality(self, a):
         # The generated test data is processed
         dict = mydict()
@@ -155,7 +154,14 @@ class TestImmutableList(unittest.TestCase):
         for i in a:
             d[i[0]] = i[1]
         key_value = list(d.keys())
-        key_value.sort()
+        leng = len(key_value)
+        for i in range(leng, 0, -1):
+            for j in range(1, i):
+                if (str(key_value[j]) < str(key_value[j - 1])):
+                    tem = key_value[j]
+                    key_value[j] = key_value[j - 1]
+                    key_value[j - 1] = tem
+
         value_list = list(d.values())
         c = []
         for i in range(len(key_value)):
@@ -164,7 +170,7 @@ class TestImmutableList(unittest.TestCase):
         b = dict.to_list()
         self.assertEqual(b, c)
 
-    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=2)))
+    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=4)))
     def test_monoid_identity(self, a):
         # The generated test data is processed
         dict1 = mydict()
@@ -173,7 +179,13 @@ class TestImmutableList(unittest.TestCase):
         for i in a:
             d[i[0]] = i[1]
         key_value = list(d.keys())
-        key_value.sort()
+        leng = len(key_value)
+        for i in range(leng, 0, -1):
+            for j in range(1, i):
+                if (str(key_value[j]) < str(key_value[j - 1])):
+                    tem = key_value[j]
+                    key_value[j] = key_value[j - 1]
+                    key_value[j - 1] = tem
         value_list = list(d.values())
         c = []
         for i in range(len(key_value)):

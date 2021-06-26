@@ -49,24 +49,23 @@ class mydict():
             return True
 
         def func(n, key, value):
-            if key == n.k:
+            if str(key) == str(n.k):
                 n.v = value
                 return True
-            if key < n.k:
+            if str(key) < str(n.k):
                 if n.lc == None:
                     n.lc = node(key, value)
                     self.count += 1
                     return True
                 else:
                     return func(n.lc, key, value)
-            if key > n.k:
+            if str(key) > str(n.k):
                 if n.rc == None:
                     n.rc = node(key, value)
                     self.count += 1
                     return True
                 else:
                     return func(n.rc, key, value)
-
         return func(self.root, key, value)
 
     def size(self):
@@ -99,13 +98,13 @@ class mydict():
         if self.count == 0:
             return None
         def myfindt(n, key):
-            if n.k == key:
+            if str(n.k) == str(key):
                 return n.v
-            if key < n.k:
+            if str(key) < str(n.k):
                 if n.lc == None:
                     return None
                 return myfindt(n.lc, key)
-            if key > n.k:
+            if str(key) > str(n.k):
                 if n.lc == None:
                     return None
                 return myfindt(n.rc, key)
@@ -139,7 +138,7 @@ class mydict():
     def remove(self, key):
         list = self.to_list()
         for i in range(len(list)):
-            if key == list[i][0]:
+            if str(key) == str(list[i][0]):
                 list.pop(i)
                 break
 

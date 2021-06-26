@@ -26,16 +26,17 @@ def add(tree, key, value):
     copy_tree = copy(tree)
 
     def func(tree, key, value):
-        if key == tree.k:
+        if str(key) == str(tree.k):
+            tree.k = key
             tree.v = value
             return True
-        if key < tree.k:
+        if str(key) < str(tree.k):
             if tree.lc == None:
                 tree.lc = node(key, value)
                 return True
             else:
                 return func(tree.lc, key, value)
-        if key > tree.k:
+        if str(key) > str(tree.k):
             if tree.rc == None:
                 tree.rc = node(key, value)
                 return True
@@ -95,13 +96,13 @@ def to_list(tree):
 
 
 def find(tree, key):
-    if tree.k == key:
+    if str(tree.k) == str(key):
         return tree.v
-    if key < tree.k:
+    if str(key) < str(tree.k):
         if tree.lc == None:
             return None
         return find(tree.lc, key)
-    if key > tree.k:
+    if str(key) > str(tree.k):
         if tree.lc == None:
             return None
         return find(tree.rc, key)
@@ -138,7 +139,7 @@ def reduce(treeitor, func):
 def remove(tree, key):
     list = to_list(tree)
     for i in range(len(list)):
-        if key == list[i][0]:
+        if str(key) == str(list[i][0]):
             list.pop(i)
             break
     return from_list(list)

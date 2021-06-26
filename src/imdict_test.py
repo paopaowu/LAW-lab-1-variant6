@@ -7,10 +7,10 @@ import hypothesis.strategies as st
 class TestImmutableList(unittest.TestCase):
     def test_add(self):
         root = imdict.node(1, 1)
-        root = imdict.add(root, 1, 2)
-        root = imdict.add(root, 2, 'abc')
-        root = imdict.add(root, 0, 'cba')
-        self.assertEqual(imdict.to_list(root), [[0, 'cba'], [1, 2], [2, 'abc']])
+        root = imdict.add(root, "1", 2)
+        root = imdict.add(root, "2", 'abc')
+        root = imdict.add(root, "0", 'cba')
+        self.assertEqual(imdict.to_list(root), [['0', 'cba'],['1',2], ['2', 'abc']])
 
     def test_remove(self):
         root = imdict.node(1, 1)
@@ -29,22 +29,28 @@ class TestImmutableList(unittest.TestCase):
 
     def test_to_list(self):
         root = imdict.node(0, 1)
-        root = imdict.add(root, 2, 'abc')
-        root = imdict.add(root, 3, 'cba')
-        self.assertEqual(imdict.to_list(root), [[0, 1], [2, 'abc'], [3, 'cba']])
+        root = imdict.add(root, '2', 'abc')
+        root = imdict.add(root, '3', 'cba')
+        self.assertEqual(imdict.to_list(root), [[0, 1], ['2', 'abc'], ['3', 'cba']])
 
     def test_from_list(self):
         root = imdict.from_list([[0, 1], [2, 'abc'], [3, 'cba']])
         self.assertEqual(imdict.to_list(root), [[0, 1], [2, 'abc'], [3, 'cba']])
 
-    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=2)))
+    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=4)))
     def test_from_list_to_list_equality(self, a):
         # The generated test data is processed
         d = {}
         for i in a:
             d[i[0]] = i[1]
         key_value = list(d.keys())
-        key_value.sort()
+        leng = len(key_value)
+        for i in range(leng, 0, -1):
+            for j in range(1, i):
+                if (str(key_value[j]) < str(key_value[j - 1])):
+                    tem = key_value[j]
+                    key_value[j] = key_value[j - 1]
+                    key_value[j - 1] = tem
         value_list = list(d.values())
         c = []
         for i in range(len(key_value)):
@@ -54,14 +60,21 @@ class TestImmutableList(unittest.TestCase):
         b = imdict.to_list(root)
         self.assertEqual(b, c)
 
-    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=2)))
+    @given(st.lists(st.lists(st.integers(), min_size=2, max_size=4)))
     def test_monoid_identity(self, a):
         # The generated test data is processed
         d = {}
         for i in a:
             d[i[0]] = i[1]
         key_value = list(d.keys())
-        key_value.sort()
+        leng = len(key_value)
+        for i in range(leng, 0, -1):
+            for j in range(1, i):
+                if (str(key_value[j]) < str(key_value[j - 1])):
+                    tem = key_value[j]
+                    key_value[j] = key_value[j - 1]
+                    key_value[j - 1] = tem
+
         value_list = list(d.values())
         c = []
         for i in range(len(key_value)):
